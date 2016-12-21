@@ -9,13 +9,18 @@
 #import "AppDelegate.h"
 #import "FMDB.h"
 #import "NSData+AES256.h"
+#import "QuestionData.h"
 
 @interface AppDelegate ()
-
+{
+    int offCount;
+}
 @property(nonatomic , strong) FMDatabaseQueue * sqlDb;
 @property(nonatomic , strong) NSArray *DBNameArray;
 
 @end
+
+
 
 @implementation AppDelegate
 
@@ -23,13 +28,14 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
-    self.DBNameArray = @[@"口腔执业医师.db",
+    self.DBNameArray = @[
+//                         @"口腔执业医师.db",
                           @"临床执业医师.db",
-                          @"临床执业助理医师考试.db",
-                          @"西药执业药师.db",
-                          @"中西医结合执业助理医师考试.db",
-                          @"中药执业药师.db",
-                          @"中医执业医师考试_有题型.db"
+//                          @"临床执业助理医师考试.db",
+//                          @"西药执业药师.db",
+//                          @"中西医结合执业助理医师考试.db",
+//                          @"中药执业药师.db",
+//                          @"中医执业医师考试_有题型.db"
                           ];
 
 //    [self getAndUpdateAnswerText];
@@ -40,12 +46,17 @@
     
 //    [self cutTitle];
 
-    [self sameCutTitle];
+//    [self sameCutTitleFirstStep];
+    
+    [self sameCutTitleSecondStep];
+    
+//    [self sameCutTitle2];
     
 //    [self sameAnswerList];
     
 //    [self encryptionDate];
 
+    NSLog(@"================== END ==================");
     return YES;
 }
 
@@ -150,7 +161,6 @@
             }
         }];
     }
-    
 }
 
 
@@ -158,14 +168,13 @@
 - (void)cutTitle
 {
     NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    _DBNameArray = @[@"临床执业医师.db"];
     for (NSString * name in _DBNameArray) {
         NSString *filePath = [documentsPath stringByAppendingPathComponent:name];
         
         self.sqlDb = nil;
         self.sqlDb = [FMDatabaseQueue databaseQueueWithPath:filePath];
         
-        NSInteger minLength = 20;
+        NSInteger minLength = 10;
         
         [_sqlDb inDatabase:^(FMDatabase *db) {
             
@@ -173,7 +182,6 @@
                 // 1、 添加字段COMBINE_ANSWER,设置内容为空
                 [db executeUpdate:@"alter table QUESTION_INFO_BEAN add COLUMN CUT_TITLE TEXT DEFAULT NULL"];
                 [db executeUpdate:@"alter table QUESTION_INFO_BEAN add COLUMN TYPE_FLAG INTEGER DEFAULT 0"];
-
                 [db executeUpdate:@"update QUESTION_INFO_BEAN set CUT_TITLE = '',TYPE_FLAG=0"];
             }
             
@@ -184,18 +192,15 @@
                 while (rs.next)
                 {
                     NSString *title = [rs stringForColumn:@"TITLE"];
+
                     if ([title containsString:@"。"])
                     {
+                        // 太简单的类似XX，XX岁。pass
                         NSRange range = [title rangeOfString:@"。" options:NSBackwardsSearch];
                         NSString *first = [title substringToIndex:range.location+range.length];
                         
-                        first = [first stringByReplacingOccurrencesOfString:@"kg" withString:@"公斤"];
-                        first = [first stringByReplacingOccurrencesOfString:@"：" withString:@""];
-                        first = [first stringByReplacingOccurrencesOfString:@"；" withString:@""];
-                        first = [first stringByReplacingOccurrencesOfString:@"，" withString:@""];
-                        first = [first stringByReplacingOccurrencesOfString:@"、" withString:@""];
-                        first = [first stringByReplacingOccurrencesOfString:@"。" withString:@""];
-                        first = [first stringByReplacingOccurrencesOfString:@"的" withString:@""];
+                        first = [self SymbolfilterWithStr:first];
+                        
                         if (first.length > minLength)
                         {
                             // 插入答案
@@ -206,14 +211,11 @@
                             NSInteger questionid = [rs intForColumn:@"QUESTION_ID"];
                             
                             NSString *updateSql = [NSString stringWithFormat:@"UPDATE QUESTION_INFO_BEAN SET CUT_TITLE = '%@',TYPE_FLAG = 1 where QUESTION_ID=%ld", first, questionid];
-                            BOOL result  = [ db executeUpdate:updateSql];
-                            if (!result) {
-                                NSLog(@"ssssssssssssssssssssssssss");
-                            }
+                            [ db executeUpdate:updateSql];
                         }
 //                        else
 //                        {
-//                            NSLog(@"比较短的——%@",first);
+//                            NSLog(@"len1:%ld__%@————%@",first.length,first,title);
 //                        }
                     }
                 }
@@ -234,14 +236,10 @@
                         NSRange range = [title rangeOfString:@"，" options:NSBackwardsSearch];
                         NSString *first = [title substringToIndex:range.location+range.length];
                         
-                        first = [first stringByReplacingOccurrencesOfString:@"kg" withString:@"公斤"];
-                        first = [first stringByReplacingOccurrencesOfString:@"：" withString:@""];
-                        first = [first stringByReplacingOccurrencesOfString:@"；" withString:@""];
-                        first = [first stringByReplacingOccurrencesOfString:@"，" withString:@""];
-                        first = [first stringByReplacingOccurrencesOfString:@"、" withString:@""];
-                        first = [first stringByReplacingOccurrencesOfString:@"的" withString:@""];
+                        first = [self SymbolfilterWithStr:first];
 
-                        if (first.length > minLength) {
+                        if (first.length > minLength)
+                        {
                             // 插入答案
                             if ([first containsString:@"'"])
                             {
@@ -250,27 +248,41 @@
                             NSInteger questionid = [rs intForColumn:@"QUESTION_ID"];
                             
                             NSString *updateSql = [NSString stringWithFormat:@"UPDATE QUESTION_INFO_BEAN SET CUT_TITLE = '%@' ,TYPE_FLAG = 1 where QUESTION_ID=%ld", first, questionid];
-                            BOOL result  = [ db executeUpdate:updateSql];
-                            if (!result) {
-                                NSLog(@"ssssssssssssssssssssssssss");
-                            }
+                            [ db executeUpdate:updateSql];
                         }
 //                        else
 //                        {
-//                            NSLog(@"比较短的——%@",first);
+//                            NSLog(@"len2:%ld__%@————%@",first.length,first,title);
 //                        }
                     }
                 }
                 
                 [rs close];
             }
-            
-            {
-                // 太简单的匹配pass
-                [db executeUpdate:@"update  QUESTION_INFO_BEAN set CUT_TITLE = '',TYPE_FLAG = 0 where CUT_TITLE like '%，%岁'"];
-            }
         }];
     }
+}
+
+
+-(NSString *)SymbolfilterWithStr:(NSString *) str
+{
+    static NSString * charSetStr = @",，.。的、：； ";
+    
+    NSCharacterSet * charSet = [NSCharacterSet characterSetWithCharactersInString:charSetStr];
+    
+    NSArray * arr = [str componentsSeparatedByCharactersInSet:charSet];
+    NSString * newStr = nil;
+    for (NSString* s  in arr) {
+        
+        if (!newStr) {
+            newStr = s;
+        }else{
+            newStr = [NSString  stringWithFormat:@"%@%@" , newStr , s];
+            
+        }
+    }
+    
+    return newStr;
 }
 
 // 多选题 审核 并不能挑选
@@ -319,116 +331,310 @@
             }
 
         }];
-        
-        
     }
 }
 
-// 公共题干
-- (void)sameCutTitle
+- (void)sameCutTitleSecondStep
 {
-    NSArray *array = @[
-                       // year,unit_U,startNUM,……,lastNUM
-                       @"2000,U2,132,2,3,3,2,3,3,3,3,3,4,160",
-                       @"2000,U3,126,3,4,3,3,2,2,2,2,4,4,4,2,160",
-                       @"2000,U4,133,3,3,3,2,3,3,2,3,4,2,160",
-                       @"2001,U2,129,2,3,3,3,2,2,2,3,3,3,2,2,2,160",
-                       @"2001,U3,129,3,3,3,3,2,3,2,3,3,2,2,3,160",
-                       @"2001,U4,133,2,2,2,3,2,2,2,2,3,2,3,3,160",
-                       @"2002,U1,66,3,3,5,4,80",
-                       @"2002,U1,149,2,2,2,2,2,2,160",
-                       @"2002,U2,68,2,3,2,3,3,80",
-                       @"2002,U2,151,2,3,2,3,160",
-                       @"2002,U3,69,2,3,2,2,3,80",
-                       @"2002,U3,148,2,2,1,3,3,2,160",
-                       @"2002,U4,69,3,3,3,3,80",
-                       @"2002,U4,149,4,3,3,2,160",
-                       @"2003,U1,69,3,2,2,3,2,80",
-                       @"2003,U1,149,3,4,3,2,160",
-                       @"2003,U2,69,3,2,2,3,2,80",
-                       @"2003,U2,149,3,4,3,2,160",
-                       @"2003,U3,69,2,2,2,3,3,80",
-                       @"2003,U3,149,2,1,2,2,3,2,160",
-                       @"2003,U4,67,3,3,2,4,2,80",
-                       @"2003,U4,146,3,3,3,3,3,160",
-                       @"2004,U1,128,3,4,2,5,3,3,3,150",
-                       @"2004,U2,128,3,2,2,3,5,2,2,4,150",
-                       @"2004,U3,127,2,2,2,2,2,3,3,3,3,2,150",
-                       @"2004,U4,126,3,3,3,2,2,2,3,2,5,150",
-                       @"2005,U1,128,3,2,2,2,3,2,3,3,3,150",
-                       @"2005,U2,128,3,4,3,5,4,4,150",
-                       @"2005,U3,127,3,3,2,3,2,3,3,3,2,150",
-                       @"2005,U4,126,3,3,2,3,2,2,3,2,3,2,150",
-                       @"2006,U1,131,2,2,2,5,3,3,3,150",
-                       @"2006,U2,128,3,2,2,3,2,3,2,2,4,150",
-                       @"2006,U3,127,3,3,2,2,3,3,3,3,2,150",
-                       @"2006,U4,126,3,3,2,3,2,2,3,2,3,2,150",
-                       @"2007,U1,82,4,85",
-                       @"2007,U1,131,3,3,3,2,3,2,2,2,150",
-                       @"2007,U2,131,3,3,3,3,2,3,3,150",
-                       @"2007,U3,127,3,3,3,3,4,3,3,2,150",
-                       @"2007,U4,138,2,3,3,1,4,150",
-                       @"2008,U1,128,3,2,2,2,3,2,3,3,3,150",
-                       @"2008,U2,128,3,2,2,3,3,2,2,2,2,2,150",
-                       @"2008,U3,125,3,3,2,4,3,3,3,3,2,150",
-                       @"2009,U1,122,3,2,3,129",
-                       @"2009,U1,143,3,3,2,150",
-                       @"2009,U4,103,2,104",
-                       @"2009,U4,116,3,3,121",
-                       @"2009,U4,125,2,2,4,3,3,2,2,142",
-                       @"2010,U1,106,4,4,3,3,119",
-                       @"2010,U1,134,2,2,3,3,3,2,2,150",
-                       @"2010,U2,114,3,2,3,3,3,4,3,2,2,3,3,2,3,149",
-                       @"2010,U3,126,3,2,3,3,4,2,2,3,3,150",
-                       @"2010,U4,145,2,2,2,150",
-                       @"2011,U1,128,3,2,2,2,3,3,2,3,3,150",
-                       @"2011,U2,116,2,3,2,2,2,2,3,2,2,2,2,2,2,2,2,3,150",
-                       @"2011,U3,116,2,3,3,3,3,3,2,3,3,3,3,4,150",
-                       @"2011,U4,144,2,3,2,150",
-                       @"2012,U1,120,3,2,2,126",
-                       @"2012,U2,109,2,2,2,2,2,2,2,2,2,2,2,2,2,134",
-                       @"2012,U3,95,3,2,3,3,4,3,3,3,3,3,3,2,3,2,134",
-                       @"2012,U4,111,2,2,2,3,2,2,3,3,3,2,3,137",
-                       @"2013,U1,120,3,2,2,126",
-                       @"2013,U2,109,2,2,3,3,3,2,2,3,2,2,2,2,136",
-                       @"2013,U3,107,2,2,2,2,2,2,2,2,3,2,2,2,3,2,136",
-                       @"2013,U4,101,2,3,2,3,3,3,3,3,5,2,3,3,135",
-                       @"2014,U1,117,2,2,3,3,126",
-                       @"2014,U2,109,2,2,3,3,2,4,2,3,3,2,134",
-                       @"2014,U3,107,3,3,2,3,2,2,2,2,3,2,2,2,2,136",
-                       @"2014,U4,101,5,2,3,2,3,3,3,3,3,3,3,2,135",
-                       @"2015,U1,116,2,3,3,2,125",
-                       @"2015,U2,109,2,2,2,2,3,2,2,2,4,4,3,136",
-                       @"2015,U3,106,2,4,3,1,2,3,2,2,2,2,3,3,2,136",
-                       @"2015,U4,101,2,2,3,3,3,3,3,4,3,3,3,3,135"
-                       ];
-
-    // 先教研数据正确性
-    for (NSString *content in array)
+    offCount = 6;
+    
+    NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    
+    for (NSString * name in _DBNameArray)
     {
-        NSArray *contentArray = [content componentsSeparatedByString:@","];
-        NSInteger start = [[contentArray objectAtIndex:2] integerValue];
-        NSInteger end = [contentArray.lastObject integerValue];
-
-        NSInteger sub = 0;
-        for (int i = 3; i< contentArray.count - 1; i++)
-        {
-            sub += [[contentArray objectAtIndex:i] integerValue];
-        }
+        NSString *filePath = [documentsPath stringByAppendingPathComponent:name];
+        NSLog(@"db:%@ path:%@",name,documentsPath);
+        self.sqlDb = nil;
+        self.sqlDb = [FMDatabaseQueue databaseQueueWithPath:filePath];
         
-        if (start + sub == end + 1)
+
+        [_sqlDb inDatabase:^(FMDatabase *db)
+         {
+             // 匹配相似的题目
+             {
+                 // 找到每年每单元的起始与截止位置
+                 NSMutableArray *dataArray = [NSMutableArray array];
+                 NSString *sql = @"select year,unit,min(NUMBER_NUMBER) as min ,max(NUMBER_NUMBER) as max from QUESTION_INFO_BEAN where type = 1 group by year,unit order by year,unit,NUMBER_NUMBER ";
+                 
+                 int count = 0;
+                 FMResultSet *rs =  [db executeQuery:sql];
+                 while (rs.next)
+                 {
+                     // 找出区域内断开的数据
+                     NSString *sql2 = [NSString stringWithFormat:@"select * from QUESTION_INFO_BEAN where year=%d and unit='%@' and NUMBER_NUMBER between %d and %d order by NUMBER_NUMBER asc",[rs intForColumn:@"year"],[rs stringForColumn:@"unit"],[rs intForColumn:@"min"]-offCount, [rs intForColumn:@"max"]+offCount];
+                     
+                     FMResultSet *rs2 =  [db executeQuery:sql2];
+                     while (rs2.next)
+                     {
+                         QuestionData *data = [[QuestionData alloc] init];
+                         data.question_Id = [rs2 stringForColumn:@"question_Id"];
+                         data.title = [rs2 stringForColumn:@"title"];
+                         data.year = [rs2 intForColumn:@"year"];
+                         data.unit = [rs2 stringForColumn:@"unit"];
+                         data.number_number = [rs2 intForColumn:@"number_number"];
+                         data.type = [rs2 intForColumn:@"type"];
+                         data.type_flag = [rs2 intForColumn:@"type_flag"];
+                         data.cut_title = [rs2 stringForColumn:@"cut_title"];
+                         [dataArray addObject:data];
+                         if (data.type == 0 && data.title.length > 50)
+                         {
+                             count ++;
+                         }
+                     }
+                     [rs2 close];
+                 }
+                 
+                 [rs close];
+                 
+                 NSArray *updateStrArray = [self searchSimilarQuestion:dataArray];
+                 for (NSString * sql in updateStrArray) {
+                     if (sql) {
+                         bool result = [db executeUpdate:sql];
+                         if (!result) {
+                             NSLog(@"update error");
+                             break;
+                         }
+                     }
+                 }
+             }
+             
+             // 找出特异点
+             {
+                 NSString *sqlT = @"select year,unit,min(NUMBER_NUMBER) as min ,max(NUMBER_NUMBER) as max from QUESTION_INFO_BEAN where type = 1 group by year,unit order by year,unit,NUMBER_NUMBER ";
+                 FMResultSet *rsT =  [db executeQuery:sqlT];
+                 NSMutableArray *dataArray = [NSMutableArray array];
+
+                 while (rsT.next)
+                 {
+                     // 找出区域内断开的数据
+                     NSString *sqlT2 = [NSString stringWithFormat:@"select * from QUESTION_INFO_BEAN where year=%d and unit='%@' and NUMBER_NUMBER between %d and %d order by NUMBER_NUMBER asc",[rsT intForColumn:@"year"],[rsT stringForColumn:@"unit"],[rsT intForColumn:@"min"], [rsT intForColumn:@"max"]];
+                     
+                     FMResultSet *rsT2 =  [db executeQuery:sqlT2];
+                     while (rsT2.next)
+                     {
+                         QuestionData *data = [[QuestionData alloc] init];
+                         data.question_Id = [rsT2 stringForColumn:@"question_Id"];
+                         data.title = [rsT2 stringForColumn:@"title"];
+                         data.year = [rsT2 intForColumn:@"year"];
+                         data.unit = [rsT2 stringForColumn:@"unit"];
+                         data.number_number = [rsT2 intForColumn:@"number_number"];
+                         data.type = [rsT2 intForColumn:@"type"];
+                         data.type_flag = [rsT2 intForColumn:@"type_flag"];
+                         data.cut_title = [rsT2 stringForColumn:@"cut_title"];
+                         [dataArray addObject:data];
+                     }
+                     
+                     [rsT2 close];
+                 }
+                 
+                 [rsT close];
+                 
+                 NSMutableArray *tempArray = [NSMutableArray array];
+                 for (int i = 1; i< dataArray.count-1; i++)
+                 {
+                     QuestionData *currData = dataArray[i];
+                     QuestionData *pre = dataArray[i-1];
+                     QuestionData *next = dataArray[i+1];
+                     if (currData.type==0 && pre.type==1 && next.type==1)
+                     {
+                         [tempArray addObject:[NSString stringWithFormat:@"update QUESTION_INFO_BEAN set type_flag = 100000 where question_id = %@;\n",currData.question_Id]];
+                     }
+                 }
+                 
+                 for (NSString * sql in tempArray) {
+                     if (sql) {
+                         bool result = [db executeUpdate:sql];
+                         if (!result) {
+                             NSLog(@"update error");
+                             break;
+                         }
+                     }
+                 }
+             }
+             
+         }];
+    }
+}
+
+- (NSArray *)searchSimilarQuestion:(NSArray *)dataArray
+{
+    NSMutableArray *resultArray = [NSMutableArray array];
+    int flag_start = 5000;
+    int number = 0;
+    // 开始找type = 0
+    for (int i = 1; i< dataArray.count-1; i++)
+    {
+        QuestionData *bigData = dataArray[i];
+        if (bigData.type == 0)
         {
-            NSLog(@"数据正确");
-        }
-        else
-        {
-            NSLog(@"!!!!数据错误：%@",content);
+            // 找到所有组织
+            NSMutableArray *allSame = [NSMutableArray array];
+            [self getSameArray:dataArray index:i direction:0 result:allSame];
+            if (allSame.count > 1)
+            {
+                number ++;
+                // 找到他们曾经的flag
+                int getFlag = flag_start ++;
+                
+                for (QuestionData *flagData in allSame)
+                {
+                    if (flagData.type_flag > 1)
+                    {
+                        getFlag = flagData.type_flag;
+                        break;
+                    }
+                }
+                
+                for (QuestionData *flagData in allSame)
+                {
+                    flagData.type = 1;
+                    flagData.type_flag = getFlag;
+                    
+                    NSLog(@"%@",flagData.title);
+                    [resultArray addObject:[NSString stringWithFormat:@"update QUESTION_INFO_BEAN set type = 1,type_flag = %d where question_id = %@;\n",getFlag,flagData.question_Id]];
+                }
+
+                NSLog(@"---------------------------------------------------------------------------------------------------------");
+            }
         }
     }
 
-    return;
+    NSLog(@"number_%d",number);
+
+    return [NSArray arrayWithArray:resultArray];
+}
+
+// 递归找组织算法：direction:0在中间 -1向前 1向后
+- (void)getSameArray:(NSArray *)origin index:(NSInteger)index direction:(int)direction result:(NSMutableArray *)result
+{
+    QuestionData *indexData = origin[index];
+    if ([indexData.question_Id isEqualToString:@"7046"])
+    {
+        NSLog(@"7046");
+    }
+    if (direction == 0)
+    {
+        [result addObject:indexData];
+        [self getSameArray:origin index:index direction:1 result:result];
+        [self getSameArray:origin index:index direction:-1 result:result];
+    }
+    else
+    {
+        if (index+direction<origin.count && index+direction>=0)
+        {
+            QuestionData *directionData = origin[index+direction];
+            if ([self isSimilarStr:indexData.title Second:directionData.title])
+            {
+                [result addObject:directionData];
+                [self getSameArray:origin index:index+direction direction:direction result:result];
+            }
+        }
+    }
+}
+
+- (void)sameCutTitleFirstStep
+{
+    NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     
-//    select NUMBER_NUMBER , title from QUESTION_INFO_BEAN where NUMBER_NUMBER > 120 order by year,unit,NUMBER_NUMBER asc
+    for (NSString * name in _DBNameArray)
+    {
+        NSString *filePath = [documentsPath stringByAppendingPathComponent:name];
+        NSLog(@"db:%@ path:%@",name,documentsPath);
+        self.sqlDb = nil;
+        self.sqlDb = [FMDatabaseQueue databaseQueueWithPath:filePath];
+        
+        [_sqlDb inDatabase:^(FMDatabase *db)
+         {
+             // 二位数组记录结果
+             NSMutableArray *bigArray = [NSMutableArray array];
+             
+             FMResultSet *rs =  [db executeQuery:@"select * from QUESTION_INFO_BEAN where type = 0 and CUT_TITLE <> ''"];
+             
+             while (rs.next)
+             {
+                 NSString *query = [NSString stringWithFormat:@"select * from QUESTION_INFO_BEAN where year=%d and unit='%@' and type = 0 and CUT_TITLE like '%%%@%%' order by NUMBER_NUMBER asc",[rs intForColumn:@"year"],[rs stringForColumn:@"unit"],[rs stringForColumn:@"cut_title"]];
+                 FMResultSet *rs2 =  [db executeQuery:query];
+                 
+                 NSMutableArray *smallArray = [NSMutableArray array];
+                 int question_id = 0;
+                 int number_number = 0;
+                 while (rs2.next)
+                 {
+                     if (question_id == 0)
+                     {
+                         question_id = [rs2 intForColumn:@"QUESTION_ID"];
+                         number_number = [rs2 intForColumn:@"NUMBER_NUMBER"];
+                     }
+                     else
+                     {
+                         int question_id2 = [rs2 intForColumn:@"QUESTION_ID"];
+                         int number_number2 = [rs2 intForColumn:@"NUMBER_NUMBER"];
+                         if (number_number2 - number_number < 5)
+                         {
+                             [smallArray addObject:[NSNumber numberWithInt:question_id]];
+                         }
+                         else
+                         {
+                             // 记录最后那个id
+                             if (smallArray.count) {
+                                 [smallArray addObject:[NSNumber numberWithInt:question_id]];
+                                 [bigArray addObject:smallArray];
+                             }
+                             smallArray = [NSMutableArray array];
+                         }
+                         question_id = question_id2;
+                         number_number = number_number2;
+                     }
+                 }
+                 // 记录最后那个id
+                 if (smallArray.count) {
+                     [smallArray addObject:[NSNumber numberWithInt:question_id]];
+                     [bigArray addObject:smallArray];
+                 }
+                 smallArray = [NSMutableArray array];
+                 
+                 
+                 [rs2 close];
+             }
+             
+             
+             {
+                 int flag_index = 100;
+
+                 for (NSArray *arr in bigArray)
+                 {
+                     flag_index ++;
+                     
+                     NSMutableString *firstStr = [NSMutableString string];
+                     
+                     for (NSNumber *number in arr)
+                     {
+                         [firstStr appendFormat:@"%@,",number];
+                     }
+                     
+                     if (firstStr.length)
+                     {
+                         NSString *temp = [firstStr substringToIndex:firstStr.length-1];
+                         NSString *typeStr = [NSString stringWithFormat:@"update QUESTION_INFO_BEAN set TYPE = 1,TYPE_FLAG = %d where QUESTION_ID in (%@)", flag_index, temp];
+                         BOOL ssss = [db executeUpdate:typeStr];
+                         if (!ssss) {
+                             NSLog(@"update error");
+                         }
+                     }
+                 }
+                 
+
+             }
+             
+             [rs close];
+         }];
+    }
+}
+
+
+// 公共题干
+- (void)sameCutTitle2
+{
     self.DBNameArray = @[
                          @"临床执业医师",
 //                         @"临床执业助理医师考试",
@@ -437,11 +643,42 @@
 //                         @"中药执业药师",
                          ];
     
+    
 
     NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     
     for (NSString * name in _DBNameArray)
     {
+        
+        NSString  *path=[[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"%@type=1",name] ofType:@"plist"];
+        NSArray *array = [NSArray arrayWithContentsOfFile:path];
+
+//        // 先校验数据正确性
+//        for (NSString *content in array)
+//        {
+//            NSArray *contentArray = [content componentsSeparatedByString:@","];
+//            NSInteger start = [[contentArray objectAtIndex:2] integerValue];
+//            NSInteger end = [contentArray.lastObject integerValue];
+//
+//            NSInteger sub = 0;
+//            for (int i = 3; i< contentArray.count - 1; i++)
+//            {
+//                sub += [[contentArray objectAtIndex:i] integerValue];
+//            }
+//
+//            if (start + sub == end + 1)
+//            {
+//                NSLog(@"数据正确");
+//            }
+//            else
+//            {
+//                NSLog(@"!!!!数据错误：%@",content);
+//            }
+//        }
+//
+//        return;
+        
+        
         NSString *filePath = [documentsPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.db",name]];
         NSLog(@"db:%@ path:%@",name,documentsPath);
         self.sqlDb = nil;
@@ -449,95 +686,156 @@
         
         [_sqlDb inDatabase:^(FMDatabase *db) {
             
+            // 打印title校验
+//            for (NSString *content in array)
+//            {
+//                NSArray *contentArray = [content componentsSeparatedByString:@","];
+//                
+//                
+//                int start = [[contentArray objectAtIndex:2] intValue];
+//                
+//                for (int i = 3; i< contentArray.count - 1; i++)
+//                {
+//                    int question_count = [[contentArray objectAtIndex:i] intValue];
+//                    
+//                    if (question_count > 1)
+//                    {
+//                        NSString *sql = [NSString stringWithFormat:@"select * from QUESTION_INFO_BEAN where year = '%@' and unit = '%@' and NUMBER_NUMBER between %d and %d order by NUMBER_NUMBER",contentArray[0],contentArray[1],start,start+question_count-1];
+//                        
+//                        FMResultSet *rs =  [db executeQuery:sql];
+//                        
+//                        while (rs.next)
+//                        {
+//                            NSString *question_title = [rs stringForColumn:@"title"];
+//                            if (question_title.length > 55) {
+//                                question_title = [question_title substringToIndex:55];
+//                            }
+//                            NSLog(@"%@_%@_%d_%d: %@",contentArray[0],contentArray[1],[rs intForColumn:@"NUMBER_NUMBER"],[rs intForColumn:@"question_id"],question_title);
+//                        }
+//                        
+//                        [rs close];
+//
+//                    }
+//                    else
+//                    {
+//                        
+//                    }
+//                    
+//                    start += question_count;
+//                    
+//                    NSLog(@"---------------------------------------------------------------------------------------------------------");
+//                }
+//                
+//                NSLog(@"========================================================================================================");
+//            }
+            
+            // 二位数组记录结果
+            NSMutableArray *bigArray = [NSMutableArray array];
+
             for (NSString *content in array)
             {
                 NSArray *contentArray = [content componentsSeparatedByString:@","];
-                NSString *sql = [NSString stringWithFormat:@"select * from QUESTION_INFO_BEAN where year = '%@' and unit = '%@' and NUMBER_NUMBER between %d and %d order by NUMBER_NUMBER",contentArray[0],contentArray[1],[[contentArray objectAtIndex:2] integerValue],[contentArray.lastObject integerValue]];
                 
-                FMResultSet *rs =  [db executeQuery:sql];
+                int start = [[contentArray objectAtIndex:2] intValue];
                 
-                while (rs.next)
+                for (int i = 3; i< contentArray.count - 1; i++)
                 {
-                    NSLog(@"%d: %@",[rs intForColumn:@"NUMBER_NUMBER"],[rs stringForColumn:@"title"]);
+                    NSMutableArray *smallArray = [NSMutableArray array];
+
+                    int question_count = [[contentArray objectAtIndex:i] intValue];
+                    
+                    if (question_count > 1)
+                    {
+                        NSString *sql = [NSString stringWithFormat:@"select * from QUESTION_INFO_BEAN where year = '%@' and unit = '%@' and NUMBER_NUMBER between %d and %d order by NUMBER_NUMBER",contentArray[0],contentArray[1],start,start+question_count-1];
+                        
+                        FMResultSet *rs =  [db executeQuery:sql];
+                        while (rs.next)
+                        {
+                            [smallArray addObject:[rs stringForColumn:@"question_id"]];
+                        }
+                        
+                        [rs close];
+                        [bigArray addObject:smallArray];
+                    }
+                    else
+                    {
+                        // 只有一条数据的略过
+                        NSLog(@"只有一条数据");
+                    }
+                    
+                    start += question_count;
                 }
             }
-            
-//            // 二位数组记录结果
-//            NSMutableArray *bigArray = [NSMutableArray array];
-//            NSMutableArray *smallArray = [NSMutableArray array];
-//
-//
-////            NSInteger number = 0;
-////            for (NSArray *arr in bigArray)
-////            {
-////                if (arr.count > 5) {
-////                    NSLog(@"%@",arr);
-////                }
-////                number += arr.count;
-////            }
-////            NSLog(@"%ld,%@",number,bigArray);
-//
-//            {
-//                NSMutableString *firstStr = [NSMutableString string];
-//                NSMutableString *lastStr = [NSMutableString string];
-//                NSMutableString *updateListStr = [NSMutableString string];
-//                
-//                int bigIndex = 0;
-//                for (NSArray *arr in bigArray)
-//                {
-//                    bigIndex ++;
-//                    int index = 0;
-//                    NSMutableString *temp = [NSMutableString string];
-//
-//                    for (NSNumber *number in arr)
-//                    {
-//                        [firstStr appendFormat:@"%@,",number];
-//
-//                        if (index > 0)
-//                        {
-//                            if ((index == arr.count - 1) && (bigIndex == bigArray.count)) {
-//                                [lastStr appendFormat:@"%@",number];
-//                            }
-//                            else
-//                            {
-//                                [lastStr appendFormat:@"%@,",number];
-//                            }
-//                            
-//                            if (index == arr.count - 1)
-//                            {
-//                                [temp appendFormat:@"%@",number];
-//                            }
-//                            else
-//                            {
-//                                [temp appendFormat:@"%@,",number];
-//                            }
-//                        }
-//                        index ++;
-//                    }
-//                    
-//                    [updateListStr appendFormat:@"update ANSWER SET  QUESTION_ID = %@ where QUESTION_ID in (%@);\n",arr.firstObject, temp];
-//                }
-//                
-//                firstStr = [firstStr substringToIndex:firstStr.length-1];
-//                NSLog(@"first:%@",firstStr);
-//                
-////                NSLog(@"last:%@",lastStr);
-////                NSLog(@"updateListStr:%@",updateListStr);
-//                
-//                NSString *typeStr = [NSString stringWithFormat:@"update QUESTION_INFO_BEAN set TYPE = 1 where QUESTION_ID in (%@)",firstStr];
-//                BOOL ssss = [db executeUpdate:typeStr];
-//                if (ssss) {
-//                    NSLog(@"set success");
-//                }
 
-//
-//                NSString *deleteStr = [NSString stringWithFormat:@"delete from QUESTION where QUESTION_ID  in (%@)",lastStr];
-//                NSString *resultStr = [NSString stringWithFormat:@"%@\n\n\n\n\n\n%@\n\n\n\n\n%@",typeStr, deleteStr, updateListStr];
-//                NSFileManager *fm = [NSFileManager defaultManager];
-//                NSString* _filename = [documentsPath stringByAppendingPathComponent:[NSString stringWithFormat:@"type_1_%@.txt",name]];
-//                //创建目录
-//                [fm createFileAtPath:_filename contents:[resultStr dataUsingEncoding:NSUTF8StringEncoding] attributes:nil];
+//            NSInteger number = 0;
+//            for (NSArray *arr in bigArray)
+//            {
+//                if (arr.count > 5) {
+//                    NSLog(@"%@",arr);
+//                }
+//                number += arr.count;
 //            }
+//            NSLog(@"%ld,%@",number,bigArray);
+
+            {
+                NSMutableString *firstStr = [NSMutableString string];
+                NSMutableString *lastStr = [NSMutableString string];
+                NSMutableString *updateListStr = [NSMutableString string];
+                
+                int bigIndex = 0;
+                for (NSArray *arr in bigArray)
+                {
+                    bigIndex ++;
+                    int index = 0;
+                    NSMutableString *temp = [NSMutableString string];
+
+                    for (NSNumber *number in arr)
+                    {
+                        [firstStr appendFormat:@"%@,",number];
+
+                        if (index > 0)
+                        {
+                            if ((index == arr.count - 1) && (bigIndex == bigArray.count)) {
+                                [lastStr appendFormat:@"%@",number];
+                            }
+                            else
+                            {
+                                [lastStr appendFormat:@"%@,",number];
+                            }
+                            
+                            if (index == arr.count - 1)
+                            {
+                                [temp appendFormat:@"%@",number];
+                            }
+                            else
+                            {
+                                [temp appendFormat:@"%@,",number];
+                            }
+                        }
+                        index ++;
+                    }
+                    
+                    [updateListStr appendFormat:@"update ANSWER SET  QUESTION_ID = %@ where QUESTION_ID in (%@);\n",arr.firstObject, temp];
+                }
+                
+                if (firstStr.length)
+                {
+                    firstStr = [firstStr substringToIndex:firstStr.length-1];
+                    NSString *typeStr = [NSString stringWithFormat:@"update QUESTION_INFO_BEAN set TYPE = 1 where QUESTION_ID in (%@)",firstStr];
+                    BOOL ssss = [db executeUpdate:typeStr];
+                    if (ssss) {
+                        NSLog(@"set success");
+                    }
+                    
+                    
+                    NSString *deleteStr = [NSString stringWithFormat:@"delete from QUESTION where QUESTION_ID  in (%@)",lastStr];
+                    NSString *resultStr = [NSString stringWithFormat:@"%@\n\n\n\n\n\n%@\n\n\n\n\n%@",typeStr, deleteStr, updateListStr];
+                    NSFileManager *fm = [NSFileManager defaultManager];
+                    NSString* _filename = [documentsPath stringByAppendingPathComponent:[NSString stringWithFormat:@"type_1_%@.txt",name]];
+                    //创建目录
+                    [fm createFileAtPath:_filename contents:[resultStr dataUsingEncoding:NSUTF8StringEncoding] attributes:nil];
+                }
+            }
         }];
     }
 }
@@ -560,7 +858,7 @@
             NSMutableArray *bigArray = [NSMutableArray array];
             NSMutableArray *smallArray = [NSMutableArray array];
             
-            FMResultSet *rs =  [db executeQuery:@"select COMBINE_ANSWER from QUESTION_INFO_BEAN group by COMBINE_ANSWER having count(*) >1"];
+            FMResultSet *rs =  [db executeQuery:@"select COMBINE_ANSWER from QUESTION_INFO_BEAN where type=0 group by COMBINE_ANSWER having count(*) >1"];
             
             while (rs.next)
             {
@@ -720,6 +1018,67 @@
             
         }];
     }];
+}
+
+
+- (BOOL)isSimilarStr:(NSString *)first  Second:(NSString *)second
+{
+    if (first.length < 36 || second.length < 36)
+    {
+        return NO;
+    }
+    
+    if (first.length > 150)
+    {
+        first = [first substringToIndex:150];
+    }
+    
+    if (second.length > 150)
+    {
+        second = [second substringToIndex:150];
+    }
+
+    // 允许5个不同字
+    static NSInteger segmentationCount = 16;
+    
+    if ([first isEqualToString:second] ||
+        [first containsString:second] ||
+        [second containsString:first])
+    {
+        return YES;
+    }
+    
+    if (first.length > second.length)
+    {
+        first = [first substringToIndex:second.length];
+    }
+    else if (second.length > first.length)
+    {
+        second = [second substringToIndex:first.length];
+    }
+    
+    NSInteger differentCount  = 0;
+    NSInteger firstCount = [first length];
+    NSInteger secondCount = [second length ];
+    NSInteger  count = labs(firstCount - secondCount);
+    
+    
+    if (count < segmentationCount) {
+        for (NSInteger i = 0 ; i < first.length; i++) {
+            NSString *temp  = [first substringWithRange:NSMakeRange( i, 1)] ;
+            if (![second containsString:temp]) {
+                differentCount++;
+            }
+        }
+        if (differentCount <= segmentationCount) {
+            
+            return true;
+        }
+        
+    }
+    
+    return false;
+    
 }
 
 @end

@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		576A34BE1E0A1638001F1AA2 /* 临床执业医师.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 576A34BD1E0A1638001F1AA2 /* 临床执业医师.rtf */; };
+		576A34C41E0A2132001F1AA2 /* 临床执业医师type=1.plist in Resources */ = {isa = PBXBuildFile; fileRef = 576A34C11E0A2132001F1AA2 /* 临床执业医师type=1.plist */; };
+		576A34C51E0A2132001F1AA2 /* 临床执业医师type=3.plist in Resources */ = {isa = PBXBuildFile; fileRef = 576A34C21E0A2132001F1AA2 /* 临床执业医师type=3.plist */; };
+		576A34C61E0A2132001F1AA2 /* type_1_临床执业医师.txt in Resources */ = {isa = PBXBuildFile; fileRef = 576A34C31E0A2132001F1AA2 /* type_1_临床执业医师.txt */; };
+		576A34C81E0A238A001F1AA2 /* 范本.plist in Resources */ = {isa = PBXBuildFile; fileRef = 576A34C71E0A238A001F1AA2 /* 范本.plist */; };
+		576A34CB1E0A67B3001F1AA2 /* QuestionData.m in Sources */ = {isa = PBXBuildFile; fileRef = 576A34CA1E0A67B3001F1AA2 /* QuestionData.m */; };
 		5796C4E51E01173C0053AF3E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5796C4E41E01173C0053AF3E /* main.m */; };
 		5796C4E81E01173C0053AF3E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5796C4E71E01173C0053AF3E /* AppDelegate.m */; };
 		5796C4EB1E01173C0053AF3E /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5796C4EA1E01173C0053AF3E /* ViewController.m */; };
@@ -26,6 +32,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		576A34BD1E0A1638001F1AA2 /* 临床执业医师.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = "临床执业医师.rtf"; sourceTree = "<group>"; };
+		576A34C11E0A2132001F1AA2 /* 临床执业医师type=1.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "临床执业医师type=1.plist"; sourceTree = "<group>"; };
+		576A34C21E0A2132001F1AA2 /* 临床执业医师type=3.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "临床执业医师type=3.plist"; sourceTree = "<group>"; };
+		576A34C31E0A2132001F1AA2 /* type_1_临床执业医师.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "type_1_临床执业医师.txt"; sourceTree = "<group>"; };
+		576A34C71E0A238A001F1AA2 /* 范本.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "范本.plist"; sourceTree = "<group>"; };
+		576A34C91E0A67B3001F1AA2 /* QuestionData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QuestionData.h; path = SQLBuilder/QuestionData.h; sourceTree = SOURCE_ROOT; };
+		576A34CA1E0A67B3001F1AA2 /* QuestionData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QuestionData.m; path = SQLBuilder/QuestionData.m; sourceTree = SOURCE_ROOT; };
 		5796C4E01E01173C0053AF3E /* SQLBuilder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SQLBuilder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5796C4E41E01173C0053AF3E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		5796C4E61E01173C0053AF3E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -67,6 +80,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		576A34BC1E0A1638001F1AA2 /* sql */ = {
+			isa = PBXGroup;
+			children = (
+				576A34C71E0A238A001F1AA2 /* 范本.plist */,
+				576A34C11E0A2132001F1AA2 /* 临床执业医师type=1.plist */,
+				576A34C21E0A2132001F1AA2 /* 临床执业医师type=3.plist */,
+				576A34C31E0A2132001F1AA2 /* type_1_临床执业医师.txt */,
+				576A34BD1E0A1638001F1AA2 /* 临床执业医师.rtf */,
+			);
+			path = sql;
+			sourceTree = "<group>";
+		};
 		5796C4D71E01173C0053AF3E = {
 			isa = PBXGroup;
 			children = (
@@ -87,6 +112,7 @@
 		5796C4E21E01173C0053AF3E /* SQLBuilder */ = {
 			isa = PBXGroup;
 			children = (
+				576A34BC1E0A1638001F1AA2 /* sql */,
 				5796C5161E0128800053AF3E /* NSData+AES256 */,
 				5796C5111E0117EE0053AF3E /* origin.db */,
 				5796C4FA1E0117750053AF3E /* FMDB */,
@@ -117,6 +143,8 @@
 				5796C4FB1E0117750053AF3E /* LICENSE.txt */,
 				5796C4FC1E0117750053AF3E /* README.markdown */,
 				5796C4FD1E0117750053AF3E /* src */,
+				576A34C91E0A67B3001F1AA2 /* QuestionData.h */,
+				576A34CA1E0A67B3001F1AA2 /* QuestionData.m */,
 			);
 			path = FMDB;
 			sourceTree = "<group>";
@@ -222,10 +250,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				576A34C51E0A2132001F1AA2 /* 临床执业医师type=3.plist in Resources */,
+				576A34C81E0A238A001F1AA2 /* 范本.plist in Resources */,
+				576A34BE1E0A1638001F1AA2 /* 临床执业医师.rtf in Resources */,
 				5796C50A1E0117750053AF3E /* LICENSE.txt in Resources */,
 				5796C5121E0117EE0053AF3E /* origin.db in Resources */,
+				576A34C61E0A2132001F1AA2 /* type_1_临床执业医师.txt in Resources */,
 				5796C4F31E01173C0053AF3E /* LaunchScreen.storyboard in Resources */,
 				5796C4F01E01173C0053AF3E /* Assets.xcassets in Resources */,
+				576A34C41E0A2132001F1AA2 /* 临床执业医师type=1.plist in Resources */,
 				5796C4EE1E01173C0053AF3E /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -246,6 +279,7 @@
 				5796C5191E0128800053AF3E /* NSData+AES256.m in Sources */,
 				5796C5101E0117750053AF3E /* FMResultSet.m in Sources */,
 				5796C4E51E01173C0053AF3E /* main.m in Sources */,
+				576A34CB1E0A67B3001F1AA2 /* QuestionData.m in Sources */,
 				5796C50D1E0117750053AF3E /* FMDatabaseAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
