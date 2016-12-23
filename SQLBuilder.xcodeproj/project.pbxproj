@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5713A3231E0BAE7800B5C2F1 /* publicTitle.m in Sources */ = {isa = PBXBuildFile; fileRef = 5713A3221E0BAE7800B5C2F1 /* publicTitle.m */; };
+		5713A3261E0BAE8C00B5C2F1 /* PublicAnswers.m in Sources */ = {isa = PBXBuildFile; fileRef = 5713A3251E0BAE8C00B5C2F1 /* PublicAnswers.m */; };
+		5713A3291E0BAEBE00B5C2F1 /* otherMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = 5713A3281E0BAEBE00B5C2F1 /* otherMethod.m */; };
+		5713A32C1E0BB44800B5C2F1 /* BaseObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 5713A32B1E0BB44800B5C2F1 /* BaseObject.m */; };
 		576A34BE1E0A1638001F1AA2 /* 临床执业医师.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 576A34BD1E0A1638001F1AA2 /* 临床执业医师.rtf */; };
 		576A34C41E0A2132001F1AA2 /* 临床执业医师type=1.plist in Resources */ = {isa = PBXBuildFile; fileRef = 576A34C11E0A2132001F1AA2 /* 临床执业医师type=1.plist */; };
 		576A34C51E0A2132001F1AA2 /* 临床执业医师type=3.plist in Resources */ = {isa = PBXBuildFile; fileRef = 576A34C21E0A2132001F1AA2 /* 临床执业医师type=3.plist */; };
@@ -26,12 +30,20 @@
 		5796C50E1E0117750053AF3E /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 5796C5041E0117750053AF3E /* FMDatabasePool.m */; };
 		5796C50F1E0117750053AF3E /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 5796C5061E0117750053AF3E /* FMDatabaseQueue.m */; };
 		5796C5101E0117750053AF3E /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 5796C5091E0117750053AF3E /* FMResultSet.m */; };
-		5796C5121E0117EE0053AF3E /* origin.db in Resources */ = {isa = PBXBuildFile; fileRef = 5796C5111E0117EE0053AF3E /* origin.db */; };
 		5796C5151E0118610053AF3E /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5796C5141E0118610053AF3E /* libsqlite3.tbd */; };
 		5796C5191E0128800053AF3E /* NSData+AES256.m in Sources */ = {isa = PBXBuildFile; fileRef = 5796C5181E0128800053AF3E /* NSData+AES256.m */; };
+		579FAB731E0D0262007A62A7 /* 纠错sql.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 579FAB721E0D0262007A62A7 /* 纠错sql.rtf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5713A3211E0BAE7800B5C2F1 /* publicTitle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = publicTitle.h; sourceTree = "<group>"; };
+		5713A3221E0BAE7800B5C2F1 /* publicTitle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = publicTitle.m; sourceTree = "<group>"; };
+		5713A3241E0BAE8C00B5C2F1 /* PublicAnswers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PublicAnswers.h; sourceTree = "<group>"; };
+		5713A3251E0BAE8C00B5C2F1 /* PublicAnswers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PublicAnswers.m; sourceTree = "<group>"; };
+		5713A3271E0BAEBE00B5C2F1 /* otherMethod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = otherMethod.h; sourceTree = "<group>"; };
+		5713A3281E0BAEBE00B5C2F1 /* otherMethod.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = otherMethod.m; sourceTree = "<group>"; };
+		5713A32A1E0BB44800B5C2F1 /* BaseObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseObject.h; sourceTree = "<group>"; };
+		5713A32B1E0BB44800B5C2F1 /* BaseObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseObject.m; sourceTree = "<group>"; };
 		576A34BD1E0A1638001F1AA2 /* 临床执业医师.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = "临床执业医师.rtf"; sourceTree = "<group>"; };
 		576A34C11E0A2132001F1AA2 /* 临床执业医师type=1.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "临床执业医师type=1.plist"; sourceTree = "<group>"; };
 		576A34C21E0A2132001F1AA2 /* 临床执业医师type=3.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "临床执业医师type=3.plist"; sourceTree = "<group>"; };
@@ -62,10 +74,10 @@
 		5796C5071E0117750053AF3E /* FMDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDB.h; sourceTree = "<group>"; };
 		5796C5081E0117750053AF3E /* FMResultSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMResultSet.h; sourceTree = "<group>"; };
 		5796C5091E0117750053AF3E /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMResultSet.m; sourceTree = "<group>"; };
-		5796C5111E0117EE0053AF3E /* origin.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = origin.db; sourceTree = "<group>"; };
 		5796C5141E0118610053AF3E /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		5796C5171E0128800053AF3E /* NSData+AES256.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+AES256.h"; sourceTree = "<group>"; };
 		5796C5181E0128800053AF3E /* NSData+AES256.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+AES256.m"; sourceTree = "<group>"; };
+		579FAB721E0D0262007A62A7 /* 纠错sql.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = "纠错sql.rtf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +95,7 @@
 		576A34BC1E0A1638001F1AA2 /* sql */ = {
 			isa = PBXGroup;
 			children = (
+				579FAB721E0D0262007A62A7 /* 纠错sql.rtf */,
 				576A34C71E0A238A001F1AA2 /* 范本.plist */,
 				576A34C11E0A2132001F1AA2 /* 临床执业医师type=1.plist */,
 				576A34C21E0A2132001F1AA2 /* 临床执业医师type=3.plist */,
@@ -114,10 +127,17 @@
 			children = (
 				576A34BC1E0A1638001F1AA2 /* sql */,
 				5796C5161E0128800053AF3E /* NSData+AES256 */,
-				5796C5111E0117EE0053AF3E /* origin.db */,
 				5796C4FA1E0117750053AF3E /* FMDB */,
 				5796C4E61E01173C0053AF3E /* AppDelegate.h */,
 				5796C4E71E01173C0053AF3E /* AppDelegate.m */,
+				5713A32A1E0BB44800B5C2F1 /* BaseObject.h */,
+				5713A32B1E0BB44800B5C2F1 /* BaseObject.m */,
+				5713A3211E0BAE7800B5C2F1 /* publicTitle.h */,
+				5713A3221E0BAE7800B5C2F1 /* publicTitle.m */,
+				5713A3241E0BAE8C00B5C2F1 /* PublicAnswers.h */,
+				5713A3251E0BAE8C00B5C2F1 /* PublicAnswers.m */,
+				5713A3271E0BAEBE00B5C2F1 /* otherMethod.h */,
+				5713A3281E0BAEBE00B5C2F1 /* otherMethod.m */,
 				5796C4E91E01173C0053AF3E /* ViewController.h */,
 				5796C4EA1E01173C0053AF3E /* ViewController.m */,
 				5796C4EC1E01173C0053AF3E /* Main.storyboard */,
@@ -254,9 +274,9 @@
 				576A34C81E0A238A001F1AA2 /* 范本.plist in Resources */,
 				576A34BE1E0A1638001F1AA2 /* 临床执业医师.rtf in Resources */,
 				5796C50A1E0117750053AF3E /* LICENSE.txt in Resources */,
-				5796C5121E0117EE0053AF3E /* origin.db in Resources */,
 				576A34C61E0A2132001F1AA2 /* type_1_临床执业医师.txt in Resources */,
 				5796C4F31E01173C0053AF3E /* LaunchScreen.storyboard in Resources */,
+				579FAB731E0D0262007A62A7 /* 纠错sql.rtf in Resources */,
 				5796C4F01E01173C0053AF3E /* Assets.xcassets in Resources */,
 				576A34C41E0A2132001F1AA2 /* 临床执业医师type=1.plist in Resources */,
 				5796C4EE1E01173C0053AF3E /* Main.storyboard in Resources */,
@@ -271,7 +291,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				5796C4EB1E01173C0053AF3E /* ViewController.m in Sources */,
+				5713A32C1E0BB44800B5C2F1 /* BaseObject.m in Sources */,
 				5796C50F1E0117750053AF3E /* FMDatabaseQueue.m in Sources */,
+				5713A3261E0BAE8C00B5C2F1 /* PublicAnswers.m in Sources */,
+				5713A3291E0BAEBE00B5C2F1 /* otherMethod.m in Sources */,
 				5796C4E81E01173C0053AF3E /* AppDelegate.m in Sources */,
 				5796C50B1E0117750053AF3E /* README.markdown in Sources */,
 				5796C50C1E0117750053AF3E /* FMDatabase.m in Sources */,
@@ -279,6 +302,7 @@
 				5796C5191E0128800053AF3E /* NSData+AES256.m in Sources */,
 				5796C5101E0117750053AF3E /* FMResultSet.m in Sources */,
 				5796C4E51E01173C0053AF3E /* main.m in Sources */,
+				5713A3231E0BAE7800B5C2F1 /* publicTitle.m in Sources */,
 				576A34CB1E0A67B3001F1AA2 /* QuestionData.m in Sources */,
 				5796C50D1E0117750053AF3E /* FMDatabaseAdditions.m in Sources */,
 			);
