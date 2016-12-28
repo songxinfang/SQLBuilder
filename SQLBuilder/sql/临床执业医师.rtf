@@ -1,5 +1,5 @@
 {\rtf1\ansi\ansicpg936\cocoartf1504\cocoasubrtf600
-{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset134 PingFangSC-Regular;}
 {\colortbl;\red255\green255\blue255;}
 {\*\expandedcolortbl;\csgray\c100000;}
 \paperw11900\paperh16840\margl1440\margr1440\vieww18140\viewh14220\viewkind0
@@ -32,4 +32,22 @@ select TYPE_FLAG from QUESTION_INFO_BEAN where TYPE_FLAG > 2 group by TYPE_FLAG 
 select year,unit,QUESTION_ID,NUMBER_NUMBER,TYPE_FLAG,TYPE,TITLE,QUESTION_ID,CUT_TITLE \
 from QUESTION_INFO_BEAN \
 where  year=2014 and unit='U3'\
-order by NUMBER_NUMBER }
+order by NUMBER_NUMBER \
+\
+\
+update CATEGORY set SORT = CATE_ID\
+\
+\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f1 \cf0 		INSERT INTO Answer_status(Answer_id,CATE_ID,Type,UNIT) select a._id , b.CATE_ID, b.type, b.UNIT from answer as a join QUESTION as b where a.question_id=b.question_id\
+\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab529\pardirnatural\partightenfactor0
+
+\f0 \cf0 select * from ANSWER where QUESTION_ID not in (select QUESTION_ID from QUESTION )\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab529\pardirnatural\partightenfactor0
+
+\f1 \cf0 select * from QUESTION where QUESTION_ID not in (select QUESTION_ID from  ANSWER)\
+}
