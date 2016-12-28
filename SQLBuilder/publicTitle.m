@@ -138,6 +138,12 @@ int flagIndex = 100;
         [_sqlDb inDatabase:^(FMDatabase *db) {
             
             {
+                // 1、 添加字段COMBINE_ANSWER,设置内容为空
+                [db executeUpdate:@"alter table QUESTION_INFO_BEAN add COLUMN CUT_TITLE TEXT DEFAULT NULL"];
+                [db executeUpdate:@"alter table QUESTION_INFO_BEAN add COLUMN TYPE_FLAG INTEGER DEFAULT 0"];
+            }
+
+            {
                 // 2、提取最后一个句号之前的内容，然后去掉逗号和句号
                 FMResultSet *rs =  [db executeQuery:@"select TITLE,QUESTION_ID from QUESTION_INFO_BEAN where type = 0"];
                 

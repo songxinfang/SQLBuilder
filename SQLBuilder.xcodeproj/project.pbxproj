@@ -12,9 +12,6 @@
 		5713A3291E0BAEBE00B5C2F1 /* otherMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = 5713A3281E0BAEBE00B5C2F1 /* otherMethod.m */; };
 		5713A32C1E0BB44800B5C2F1 /* BaseObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 5713A32B1E0BB44800B5C2F1 /* BaseObject.m */; };
 		576A34BE1E0A1638001F1AA2 /* 临床执业医师.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 576A34BD1E0A1638001F1AA2 /* 临床执业医师.rtf */; };
-		576A34C41E0A2132001F1AA2 /* 临床执业医师type=1.plist in Resources */ = {isa = PBXBuildFile; fileRef = 576A34C11E0A2132001F1AA2 /* 临床执业医师type=1.plist */; };
-		576A34C51E0A2132001F1AA2 /* 临床执业医师type=3.plist in Resources */ = {isa = PBXBuildFile; fileRef = 576A34C21E0A2132001F1AA2 /* 临床执业医师type=3.plist */; };
-		576A34C61E0A2132001F1AA2 /* type_1_临床执业医师.txt in Resources */ = {isa = PBXBuildFile; fileRef = 576A34C31E0A2132001F1AA2 /* type_1_临床执业医师.txt */; };
 		576A34C81E0A238A001F1AA2 /* 范本.plist in Resources */ = {isa = PBXBuildFile; fileRef = 576A34C71E0A238A001F1AA2 /* 范本.plist */; };
 		576A34CB1E0A67B3001F1AA2 /* QuestionData.m in Sources */ = {isa = PBXBuildFile; fileRef = 576A34CA1E0A67B3001F1AA2 /* QuestionData.m */; };
 		5796C4E51E01173C0053AF3E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5796C4E41E01173C0053AF3E /* main.m */; };
@@ -45,9 +42,6 @@
 		5713A32A1E0BB44800B5C2F1 /* BaseObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseObject.h; sourceTree = "<group>"; };
 		5713A32B1E0BB44800B5C2F1 /* BaseObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseObject.m; sourceTree = "<group>"; };
 		576A34BD1E0A1638001F1AA2 /* 临床执业医师.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = "临床执业医师.rtf"; sourceTree = "<group>"; };
-		576A34C11E0A2132001F1AA2 /* 临床执业医师type=1.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "临床执业医师type=1.plist"; sourceTree = "<group>"; };
-		576A34C21E0A2132001F1AA2 /* 临床执业医师type=3.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "临床执业医师type=3.plist"; sourceTree = "<group>"; };
-		576A34C31E0A2132001F1AA2 /* type_1_临床执业医师.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "type_1_临床执业医师.txt"; sourceTree = "<group>"; };
 		576A34C71E0A238A001F1AA2 /* 范本.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "范本.plist"; sourceTree = "<group>"; };
 		576A34C91E0A67B3001F1AA2 /* QuestionData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QuestionData.h; path = SQLBuilder/QuestionData.h; sourceTree = SOURCE_ROOT; };
 		576A34CA1E0A67B3001F1AA2 /* QuestionData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QuestionData.m; path = SQLBuilder/QuestionData.m; sourceTree = SOURCE_ROOT; };
@@ -97,9 +91,6 @@
 			children = (
 				579FAB721E0D0262007A62A7 /* 纠错sql.rtf */,
 				576A34C71E0A238A001F1AA2 /* 范本.plist */,
-				576A34C11E0A2132001F1AA2 /* 临床执业医师type=1.plist */,
-				576A34C21E0A2132001F1AA2 /* 临床执业医师type=3.plist */,
-				576A34C31E0A2132001F1AA2 /* type_1_临床执业医师.txt */,
 				576A34BD1E0A1638001F1AA2 /* 临床执业医师.rtf */,
 			);
 			path = sql;
@@ -270,15 +261,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				576A34C51E0A2132001F1AA2 /* 临床执业医师type=3.plist in Resources */,
 				576A34C81E0A238A001F1AA2 /* 范本.plist in Resources */,
 				576A34BE1E0A1638001F1AA2 /* 临床执业医师.rtf in Resources */,
 				5796C50A1E0117750053AF3E /* LICENSE.txt in Resources */,
-				576A34C61E0A2132001F1AA2 /* type_1_临床执业医师.txt in Resources */,
 				5796C4F31E01173C0053AF3E /* LaunchScreen.storyboard in Resources */,
 				579FAB731E0D0262007A62A7 /* 纠错sql.rtf in Resources */,
 				5796C4F01E01173C0053AF3E /* Assets.xcassets in Resources */,
-				576A34C41E0A2132001F1AA2 /* 临床执业医师type=1.plist in Resources */,
 				5796C4EE1E01173C0053AF3E /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

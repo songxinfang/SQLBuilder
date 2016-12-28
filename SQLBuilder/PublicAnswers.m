@@ -29,8 +29,14 @@
         
         FMDatabaseQueue *_sqlDb = [FMDatabaseQueue databaseQueueWithPath:filePath];
         
+        
         [_sqlDb inDatabase:^(FMDatabase *db)
          {
+             {
+                 // 1、 添加字段COMBINE_ANSWER,设置内容为空
+                 [db executeUpdate:@"alter table QUESTION_INFO_BEAN add COLUMN TYPE_FLAG INTEGER DEFAULT 0"];
+             }
+
              // 二位数组记录结果
              NSMutableArray *dataArray = [NSMutableArray array];
              

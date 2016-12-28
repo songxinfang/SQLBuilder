@@ -18,7 +18,7 @@
     for (NSString * name in [self getDBNameArray])
     {
         NSString *filePath = [documentsPath stringByAppendingPathComponent:name];
-        
+        NSLog(@"%@",filePath);
         FMDatabaseQueue *_sqlDb = [FMDatabaseQueue databaseQueueWithPath:filePath];
         
         [_sqlDb inDatabase:^(FMDatabase *db) {
@@ -227,41 +227,49 @@
 {
     NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     
-    NSString *filePath = [documentsPath stringByAppendingPathComponent:@"bpm无数据.db"];
-    
-    FMDatabaseQueue *_sqlDb = [FMDatabaseQueue databaseQueueWithPath:filePath];
-    
-    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
-    
-    [_sqlDb inDatabase:^(FMDatabase *db) {
+    for (NSString * name in [self getDBNameArray])
+    {
+        NSString *filePath = [documentsPath stringByAppendingPathComponent:name];
         
-        NSString * selectStr =@"select _id , CORRECT_ANSWER  from ANSWER";
+        NSLog(@"fileName:%@",name);
         
-        FMResultSet * rs = [db executeQuery:selectStr];
+        FMDatabaseQueue *_sqlDb = [FMDatabaseQueue databaseQueueWithPath:filePath];
         
-        while (rs.next) {
+        NSMutableDictionary * dic = [NSMutableDictionary dictionary];
+        
+        [_sqlDb inDatabase:^(FMDatabase *db) {
             
-            NSString *  _id = [rs stringForColumn:@"_id"];
-            NSString * CORRECT_ANSWER = [rs stringForColumn:@"CORRECT_ANSWER"];
+            NSString * selectStr =@"select QUESTION_ID, ANSWER from QUESTION_INFO_BEAN";
             
-            dic[_id] = CORRECT_ANSWER;
-        }
-    }];
-    
-    
-    [dic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
-        
-        NSString * CORRECT_ANSWER = (NSString *)obj;
-        CORRECT_ANSWER = [NSData AES256EncryptWithPlainText:CORRECT_ANSWER];
-        
-        NSString * updateStr = [NSString stringWithFormat:@"update ANSWER set CORRECT_ANSWER = '%@' where _id = %@ " , CORRECT_ANSWER , key];
-        
-        [_sqlDb  inDatabase:^(FMDatabase *db) {
+            FMResultSet * rs = [db executeQuery:selectStr];
             
-            bool ret = [db executeUpdate:updateStr   ];
-            NSLog(@"%d" ,ret);
+            while (rs.next) {
+                
+                NSString *  _id = [rs stringForColumn:@"QUESTION_ID"];
+                NSString * CORRECT_ANSWER = [rs stringForColumn:@"ANSWER"];
+                
+                dic[_id] = CORRECT_ANSWER;
+            }
         }];
-    }];
+        
+        
+        [dic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+            
+            NSString * CORRECT_ANSWER = (NSString *)obj;
+            CORRECT_ANSWER = [NSData AES256EncryptWithPlainText:CORRECT_ANSWER];
+            
+            NSString * updateStr = [NSString stringWithFormat:@"update QUESTION_INFO_BEAN set ANSWER = '%@' where QUESTION_ID = %@ " , CORRECT_ANSWER , key];
+            
+            [_sqlDb  inDatabase:^(FMDatabase *db) {
+                
+                bool ret = [db executeUpdate:updateStr   ];
+                if (!ret) {
+                    NSLog(@"%d" ,ret);
+                }
+            }];
+        }];
+
+    }
 }
 
 // 打印最后的调整文本
@@ -328,7 +336,7 @@
             NSString *deleteStr = [NSString stringWithFormat:@"delete from QUESTION where QUESTION_ID  in (%@)",[deleteQueue substringToIndex:deleteQueue.length-1]];
             NSString *resultStr = [NSString stringWithFormat:@"%@\n\n\n\n\n\n%@", deleteStr, updateQueue];
             NSFileManager *fm = [NSFileManager defaultManager];
-            NSString* _filename = [documentsPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.txt",name]];
+            NSString* _filename = [documentsPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.txt",[name substringToIndex:name.length - 3]]];
             //创建目录
             [fm createFileAtPath:_filename contents:[resultStr dataUsingEncoding:NSUTF8StringEncoding] attributes:nil];
 
