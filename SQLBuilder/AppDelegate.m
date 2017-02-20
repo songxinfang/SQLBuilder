@@ -30,18 +30,30 @@
     
     
     
-    self.DBNameArray = @[
-//                         @"护士执业考试.db",
-                         @"口腔执业医师.db",
-                         @"临床执业医师.db",
-                         @"临床执业助理医师考试.db",
-                         @"西药执业药师.db",
-                         @"中西医结合执业助理医师考试.db",
-                         @"中药执业药师.db",
-                         @"中医执业医师考试.db"
-                         ];
+//    self.DBNameArray = @[
+////                         @"护士执业考试.db",
+//                         @"口腔执业医师.db",
+//                         @"临床执业医师.db",
+//                         @"临床执业助理医师考试.db",
+//                         @"西药执业药师.db",
+//                         @"中西医结合执业助理医师考试.db",
+//                         @"中药执业药师.db",
+//                         @"中医执业医师考试.db"
+//                         ];
 
-//    [otherMethod getAndUpdateAnswerText];
+    self.DBNameArray = @[
+                         @"HSZYKAOSHI.db",
+                         @"KQZYYISHI.db",
+                         @"LCZYYISHI.db",
+                         @"LCZYZLYISHI.db",
+                         @"XYZYYAOSHI.db",
+                         @"ZXYJHZYZLYISHI.db",
+                         @"ZYZYYAOSHI.db",
+                         @"ZYZYYISHI.db"
+                         ];
+    
+
+    //    [otherMethod getAndUpdateAnswerText];
 //
 //    [otherMethod deleteRepeatData];
 //    
@@ -55,8 +67,10 @@
     
 //    [PublicAnswers publicAnswerSearch];
     
-    [otherMethod printText];
+//    [otherMethod printText];
     
+    [otherMethod diffCategory];
+
     NSLog(@"================== END ==================");
     return YES;
 }

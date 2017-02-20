@@ -28,4 +28,7 @@
 // 打印最后的调整文本
 + (void)printText;
 
+// 不同category的公共题干和公共选项题目
++ (void)diffCategory;
+
 @end

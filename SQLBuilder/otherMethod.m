@@ -344,4 +344,78 @@
     }
 }
 
+// 不同category的公共题干和公共选项题目
++ (void)diffCategory
+{
+    NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    
+    for (NSString * name in [self getDBNameArray])
+    {
+        NSString *filePath = [documentsPath stringByAppendingPathComponent:name];
+        NSLog(@"%@",filePath);
+        
+        FMDatabaseQueue *_sqlDb = [FMDatabaseQueue databaseQueueWithPath:filePath];
+        
+        [_sqlDb inDatabase:^(FMDatabase *db) {
+            
+            NSString *selectStr = @"select * from ANSWER group by QUESTION_ID HAVING count()>1 order by QUESTION_ID asc";
+            
+            FMResultSet * rs = [db executeQuery:selectStr];
+            
+            while (rs.next)
+            {
+                int question_id = [rs intForColumn:@"QUESTION_ID"];
+                NSString *selectStr2 = [NSString stringWithFormat:@"select b.cate_id,count() from ANSWER as a join Answer_status as b where a._id = b.answer_id and a.QUESTION_ID =  %d group by b.cate_id",question_id];
+                
+                FMResultSet * rs2 = [db executeQuery:selectStr2];
+                
+                
+                if (rs2.next)
+                {
+                    int first = [rs2 intForColumn:@"cate_id"];
+                    if (rs2.next) {
+                        NSLog(@"a.QUESTION_ID:%d",question_id);
+                        NSLog(@"first:%d",first);
+                        NSLog(@"second:%d",[rs2 intForColumn:@"cate_id"]);
+                    }
+                }
+                
+                [rs2 close];
+            }
+            
+            [rs close];
+        }];
+    }
+
+//    {
+//        NSString *filePath = [documentsPath stringByAppendingPathComponent:name];
+//        NSLog(@"%@",filePath);
+//        
+//        FMDatabaseQueue *_sqlDb = [FMDatabaseQueue databaseQueueWithPath:filePath];
+//        
+//        [_sqlDb inDatabase:^(FMDatabase *db) {
+//            
+//            NSString *selectStr = @"select a.question_id,b.cate_id from ANSWER as a join Answer_status as b where a._id = b.answer_id and b.type in (1,3) ";
+//            
+//            FMResultSet * rs = [db executeQuery:selectStr];
+//            
+//            while (rs.next)
+//            {
+//                int question_id = [rs intForColumn:@"QUESTION_ID"];
+//                int cate_id = [rs intForColumn:@"cate_id"];
+//
+//                NSString *typeStr = [NSString stringWithFormat:@"update Answer_status set cate_id = %d where answer_id in (select b.answer_id from ANSWER as a join Answer_status as b where a._id = b.answer_id and a.QUESTION_ID = %d)",cate_id,question_id];
+//                
+//                BOOL success = [db executeUpdate:typeStr];
+//                
+//                if (!success) {
+//                    NSLog(@"shibai");
+//                }
+//            }
+//            
+//            [rs close];
+//        }];
+//    }
+}
+
 @end
